@@ -446,6 +446,19 @@ class rflink extends eqLogic {
 
     $rflink = self::byLogicalId($nodeid, 'rflink');
 
+    // Check if this sensor is known
+    if (!is_object($rflink))
+     {
+        // If not look for a generic one (ID:*) and use it if found
+        $nodeid_generic = $protocol . '_*';
+        $rflink_generic = self::byLogicalId($nodeid_generic, 'rflink');
+        if (is_object($rflink_generic))
+        {
+          $rflink = $rflink_generic;
+          $nodeid = $nodeid_generic;
+        }
+     }
+
     if (!is_object($rflink) && config::byKey('include_mode', 'rflink') == '1') {
       $rflink = new rflink();
       $rflink->setEqType_name('rflink');
